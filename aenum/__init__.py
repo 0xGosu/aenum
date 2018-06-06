@@ -795,6 +795,8 @@ def __new__(cls, *args, **kwds):
             default = getattr(cls, name).default
             if default is undefined:
                 missing.append(name)
+            elif callable(default):  # Vincent: allow an callable object to be passed to generate default value for NamedTuple
+                final_args[index] = default()
             else:
                 final_args[index] = default
     if missing:
@@ -2388,7 +2390,7 @@ temp_enum_dict['__repr__'] = __repr__
 del __repr__
 
 def __str__(self):
-    return "%s.%s" % (self.__class__.__name__, self._name_)
+    return str(self._value_)  # Vincent: str() will output value of enum Original: return "%s.%s" % (self.__class__.__name__, self._name_)
 temp_enum_dict['__str__'] = __str__
 del __str__
 
@@ -2473,14 +2475,14 @@ else:
 def __eq__(self, other):
     if type(other) is self.__class__:
         return self is other
-    return NotImplemented
+    return self._value_ == other  # Vincent: make Enum comparable to str or int Original: return NotImplemented
 temp_enum_dict['__eq__'] = __eq__
 del __eq__
 
 def __ne__(self, other):
     if type(other) is self.__class__:
         return self is not other
-    return NotImplemented
+    return self._value_ != other  # Vincent: make Enum comparable to str or int Original: return NotImplemented
 temp_enum_dict['__ne__'] = __ne__
 del __ne__
 

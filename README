@@ -1,7 +1,30 @@
 aenum --- support for advanced enumerations, namedtuples, and constants
 ===========================================================================
-This repository is forked from `https://bitbucket.org/stoneleaf/aenum` with some modification on representation of Enum
-to make it easy to use
+This repository is forked from `https://bitbucket.org/stoneleaf/aenum` with
+some modification on representation of Enum to make it easy to use
+
+My changes include these:
+--------------
++ Allow an callable object to be passed to generate default value for NamedTuple
+class N(NamedTuple)
+    d = 0, "a dictionary", dict #
+    b = 1, "a namedtuplel", N2  # N2 is another NamedTuple class
+
++ Allow Enum to be comparable to str or int for example:
+class E(Enum):
+    a = 'A'
+    b = 2
+E.a == 'A' # output True instead of False
+E.a != 'A' # output False instead of True
+E.b == 2 # output True instead of False
+E.b != 2 # output False instead of True
+
++ Make Enum to convertable to string for example:
+str(E.a) # output 'A' instead of "<E.a: 'A'>"
+
+
+--------------
+
 
 Advanced Enumerations (compatible with Python's stdlib Enum), NamedTuples,
 and NamedConstants
